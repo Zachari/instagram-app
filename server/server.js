@@ -11,6 +11,7 @@ var moment = require('moment');
 var mongoose = require('mongoose');
 var path = require('path');
 var request = require('request');
+var compress = require('compression');
 
 var config = require('./config');
 
@@ -34,10 +35,11 @@ var corsOptions = {
 };
 
 app.set('port', process.env.PORT || 3000);
+app.use(compress());
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: 2628000000 }));  // Sets maxAge for caching to one month
 
 function createToken(user) {
     var payload = {
